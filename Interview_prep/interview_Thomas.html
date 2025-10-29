@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interview Flashcards</title>
+<style>
+  body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; margin-top: 50px; }
+  .card { border: 2px solid #333; border-radius: 10px; padding: 20px; width: 600px; text-align: center; background-color: #f9f9f9; }
+  .category { font-weight: bold; margin-bottom: 10px; }
+  .question { font-size: 18px; margin: 20px 0; }
+  .answer { display: none; margin-top: 20px; font-style: italic; color: #f00; text-align: left; }
+  button { margin: 5px; padding: 10px 15px; font-size: 14px; }
+  select { margin-bottom: 20px; padding: 5px; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<h2>Interview Flashcards</h2>
+
+<select id="categoryFilter">
+  <option value="All">All Categories</option>
+  <option value="Fit">Fit</option>
+  <option value="Technical">Technical</option>
+  <option value="Brainteaser">Brainteaser</option>
+</select>
+
+<div class="card">
+  <div class="category" id="cardCategory">Category</div>
+  <div class="question" id="cardQuestion">Question will appear here</div>
+  <div class="answer" id="cardAnswer">Answer will appear here</div>
+</div>
+
+<div>
+  <button id="prevBtn">Previous</button>
+  <button id="showBtn">Show Answer</button>
+  <button id="nextBtn">Next</button>
+</div>
+
+<script>
+const flashcards = [
+  // ========================
+  // FIT QUESTIONS
+  // ========================
+  {category: "Fit", question: "Tell me about yourself", answer: "Hello, my name is Thomas. I have an engineering background from École Centrale de Lyon, specialized in applied mathematics and quantitative finance. I’m currently doing the MSc in Financial Markets at Paris Dauphine. Professionally, I worked at Key Capital Partners developing BI tools and optimizing volatility models. I enjoy coding, trading, and solving complex problems."},
+  {category: "Fit", question: "Why the business area?", answer: "I am passionate about market finance because it combines quantitative modeling, risk management, and real-time decision making. My experience with derivatives and financial modeling confirmed this interest."},
+  {category: "Fit", question: "What are the market trends affecting the business area?", answer: "Key trends include central bank monetary policies, inflation dynamics, geopolitical tensions, sector rotation in equities, volatility fluctuations, and credit spread changes."},
+  {category: "Fit", question: "Why would you be a good fit?", answer: "I combine strong quantitative skills, coding expertise, and market knowledge with practical experience in derivatives and portfolio analysis. I thrive under pressure and enjoy collaborative problem-solving."},
+  {category: "Fit", question: "Team player or prefer to work alone?", answer: "I am flexible: I collaborate closely in teams but can also take independent ownership of projects when needed. I believe results come from both synergy and individual responsibility."},
+  {category: "Fit", question: "What is a macroeconomic trend you follow?", answer: "I follow inflation dynamics, central bank policy changes, credit spreads, and global growth trends, as they impact asset pricing, volatility, and investment opportunities."},
+  {category: "Fit", question: "Tell me about a time you handled a stressful situation", answer: "During my internship at GE Vernova, a production issue required immediate analysis. I coordinated with engineers, prioritized tasks, and implemented a solution under time pressure, resolving the issue efficiently."},
+  {category: "Fit", question: "When was a time you failed at work and what did you learn?", answer: "Early in my engineering studies, I failed a challenging math exam. I reflected, worked consistently on problem areas, and eventually excelled, learning resilience and structured learning."},
+  {category: "Fit", question: "Tell us about a time you noticed people doing something wrong and how you handled it", answer: "During a sailing camp, I noticed a safety procedure being skipped. I intervened calmly, explained the risk, and enforced compliance without confrontation, ensuring safety."},
+  {category: "Fit", question: "Describe a time you had to overcome adversity", answer: "In the Stock Classification Challenge, my first model failed. I studied advanced ML techniques, rebuilt it with RNNs + Transformers, and delivered strong results. Learned perseverance and adaptability."},
+  {category: "Fit", question: "Walk me through your resume", answer: "Engineering degree at École Centrale de Lyon, MSc in Financial Markets at Dauphine, internships at Key Capital Partners and GE Vernova focusing on BI tools, volatility models, and production optimization. Skills: Python, SQL, data analysis, risk modeling."},
+  {category: "Fit", question: "Explain the risk appetite of a client", answer: "Risk appetite reflects how much uncertainty or potential loss a client is willing to accept for expected returns. Conservative clients prefer low-volatility assets; aggressive clients accept more risk for higher potential gains."},
+  {category: "Fit", question: "Why this bank? Why this role?", answer: "This bank is a leader in market finance with strong innovation and global reach. The role offers exposure to derivatives, trading, and quantitative analysis, aligning perfectly with my skills and career goals."},
+  {category: "Fit", question: "Describe a time you had to deal with a difficult client", answer: "During Key Capital Partners internship, a client requested last-minute changes. I listened carefully, managed expectations, and delivered an adapted solution, maintaining the relationship."},
+  {category: "Fit", question: "What will you do in a team where there isn't consensus?", answer: "I would listen to all perspectives, identify common goals, propose compromise solutions, and if necessary, escalate with clear reasoning to reach a decision collaboratively."},
+  {category: "Fit", question: "Why do you want to be a trader?", answer: "I enjoy fast-paced decision making, applying quantitative models, and analyzing markets in real-time. Trading combines math, strategy, and psychology — it fits my skills and interests."},
+  {category: "Fit", question: "Tell us about a recent financial news story you found interesting and why", answer: "The recent US CPI report showed moderating inflation, affecting Fed policy expectations and bond yields. It’s interesting because it impacts cross-asset valuations, volatility, and trading opportunities."},
+  {category: "Fit", question: "What value could you add to the team?", answer: "Quantitative skills, coding expertise, and ability to analyze markets quickly. I also bring teamwork experience, problem-solving under pressure, and a passion for market dynamics."},
+  {category: "Fit", question: "What are your strengths and weaknesses?", answer: "Strengths: analytical thinking, coding skills, adaptability, teamwork. Weaknesses: sometimes overly detail-oriented, but I’m working on balancing precision with efficiency."},
+  {category: "Fit", question: "Where do you see yourself in 5 years?", answer: "In 5 years, I see myself as a proficient trader or quantitative analyst, contributing to strategy development and risk management, while continuously learning and growing in the finance industry."},
+  {category: "Fit", question: "What motivates you?", answer: "Solving complex problems, continuous learning, and achieving tangible results. I’m driven by challenges that require both analytical skills and creativity."},
+  {category: "Fit", question: "How do you handle failure?", answer: "I analyze what went wrong, seek feedback, and develop a plan to improve. I view failure as a learning opportunity and stay resilient in pursuing my goals."},
+  {category: "Fit", question: "What do you do outside of work?", answer: "I enjoy sailing, coding personal projects, reading about markets, and staying active through sports. These activities help me relax and maintain a balanced lifestyle."},
+  {category: "Fit", question: "What is your leadership style?", answer: "I lead by example, fostering collaboration and open communication. I believe in empowering team members, providing clear goals, and supporting their growth."},
+  {category: "Fit", question: "How do you prioritize tasks?", answer: "I assess urgency and impact, create a to-do list, and focus on high-priority items first. I also remain flexible to adjust as new tasks arise."},
+  {category: "Fit", question: "Describe a time you had to multitask", answer: "During my Murex internship, I validated FX derivatives pricing, prepared reports, and organized academic work simultaneously. I used checklists and prioritization to manage efficiently."},
+  // ========================
+  // BEHAVIORAL / STAR QUESTIONS
+  // ========================
+
+  {category: "Behavioral", question: "Tell me about a time you took a leadership role", answer: "Supervised a sailing camp with 29 minors, coordinated logistics, ensured safety, and handled unexpected weather changes while promoting teamwork and responsibility."},
+  {category: "Behavioral", question: "Tell me about a time you handled a stressful situation", answer: "During my internship at GE Vernova, a production issue required immediate action. I coordinated tasks, prioritized solutions, and resolved the problem efficiently under time pressure."},
+  {category: "Behavioral", question: "Describe a time you had to overcome adversity", answer: "In the Stock Classification Challenge, my first deep learning model failed. I studied advanced ML techniques, rebuilt it using RNNs + Transformers, and delivered strong results, learning perseverance and adaptability."},
+  {category: "Behavioral", question: "When was a time you failed at work and what did you learn?", answer: "I failed a math exam early in my engineering studies. I learned discipline, focused on weaknesses, and improved steadily, demonstrating resilience and consistent effort."},
+  {category: "Behavioral", question: "Tell us about a time you noticed people doing something wrong and how you handled it", answer: "During a sailing camp, I observed a safety procedure being skipped. I intervened calmly, explained the risk, and enforced compliance without confrontation."},
+  {category: "Behavioral", question: "Describe a time you had to deal with a difficult client", answer: "At Key Capital Partners, a client requested last-minute changes. I listened, managed expectations, and delivered an adapted solution, maintaining trust and professionalism."},
+  {category: "Behavioral", question: "Tell me about a time you had to convince people", answer: "At GE Vernova, I proposed a new assembly method to reduce part deformation. I convinced operators by showing efficiency gains and long-term benefits."},
+  {category: "Behavioral", question: "Give an example of a time you had to deal with a conflict in a team", answer: "During a sailing camp, two participants conflicted. I listened to both, redistributed tasks fairly, and restored balance, learning the importance of fairness and communication."},
+  {category: "Behavioral", question: "Give an example of a time you had to multitask", answer: "During my Murex internship, I validated FX derivatives pricing, prepared reports, and organized my academic work simultaneously. I used checklists and task prioritization to manage efficiently."},
+  {category: "Behavioral", question: "What will you do in a team where there isn't consensus?", answer: "I would listen to all perspectives, identify common goals, propose compromise solutions, and escalate if necessary with clear reasoning to reach a collaborative decision."},
+
+  // ========================
+  // TECHNICAL QUESTIONS
+  // ========================
+  {category: "Technical", question: "Explique les principaux grecs", answer: "Delta: sensibilité au spot. Gamma: variation du delta. Vega: sensibilité à la volatilité. Theta: effet du temps. Rho: sensibilité au taux."},
+  {category: "Technical", question: "Donne une position gamma long et vega short", answer: "Un straddle est gamma long et vega long. Pour être vega short et gamma long, on peut combiner un straddle long avec une vente d’options plus longues maturités."},
+  {category: "Technical", question: "Quel est l’avantage d’un modèle SLV ?", answer: "Il combine le fit exact de la smile (Local Vol) et la dynamique stochastique réaliste (Stochastic Vol). Il reproduit mieux la surface implicite dans le temps."},
+  {category: "Technical", question: "Qu’est-ce qui renvoie le prix le plus élevé entre SLV et Local Vol ?", answer: "Le modèle SLV, car l’ajout de volatilité stochastique augmente la convexité du payoff."},
+  {category: "Technical", question: "Définition d’un Autocall", answer: "Produit structuré offrant un coupon conditionnel et un remboursement anticipé si le sous-jacent dépasse une barrière à certaines dates."},
+  {category: "Technical", question: "Forward price avec et sans dividendes", answer: "Sans dividendes: F = S₀ e^{rT}. Avec dividendes: F = S₀ e^{(r−q)T} ou F = (S₀ − PV(div)) e^{rT}."},
+  {category: "Technical", question: "Impact des dividendes sur un Autocall", answer: "Des dividendes plus élevés réduisent le forward, diminuant la probabilité d’autocall — donc le produit offre un coupon plus élevé."},
+  {category: "Technical", question: "Formule Black-Scholes Call", answer: "C = S₀ e^{−qT} N(d₁) − K e^{−rT} N(d₂)."},
+  {category: "Technical", question: "FX Forward formule", answer: "F = S₀ e^{(r_d − r_f)T}."},
+  {category: "Technical", question: "Comment se hedger contre risque de taux ou de crédit ?", answer: "Risque de taux: swaps, futures, duration matching. Risque de crédit: CDS, diversification, collatéralisation."},
+  {category: "Technical", question: "C’est quoi une dichotomie ?", answer: "Méthode numérique de recherche de racine utilisée pour trouver la volatilité implicite."},
+  {category: "Technical", question: "Lien entre delta, gamma, theta", answer: "Gamma positif implique un delta qui varie vite avec le spot. Theta est négatif pour une position longue option. Gamma et theta sont de signe opposé."},
+  {category: "Technical", question: "Trader, pricer une vol implicite plus haute ou basse que le marché ?", answer: "Un vendeur d’options pricera une vol plus haute pour se protéger du risque de volatilité future."},
+  {category: "Technical", question: "Pricing d’une obligation", answer: "Prix = somme des cash-flows actualisés. Duration = sensibilité au taux. Convexité = correction de second ordre."},
+  {category: "Technical", question: "Différence LCR / NSFR", answer: "LCR = ratio de liquidité à 30 jours. NSFR = ratio de financement stable à horizon long terme (1 an)."},
+  {category: "Technical", question: "Qu’est-ce qu’un Swap (IRS, TRS, CDS)", answer: "IRS: échange taux fixe/variable. TRS: échange performance d’un actif contre taux. CDS: protection contre défaut de crédit."},
+
+  // ========================
+  // BRAINTEASER QUESTIONS
+  // ========================
+  {category: "Brainteaser", question: "Combien de zéros à la fin de 100! ?", answer: "Nombre de 5 dans 100! = 100//5 + 100//25 = 24 zéros."},
+  {category: "Brainteaser", question: "Cube 10×10×10", answer: "Volume 1000. 8 sommets, 12 arêtes, 6 faces selon le contexte."},
+  {category: "Brainteaser", question: "Dice Payoff", answer: "Calculer espérance selon la distribution des sommes (2 à 12) : E = Σ p(x) × payoff(x)."},
+  {category: "Brainteaser", question: "Bibliothèque Python avec recherche tolérante", answer: "Représenter par un dictionnaire {'id': 'titre'}. Recherche robuste via .lower() et fuzzy matching (difflib, fuzzywuzzy)."},
+  {category: "Brainteaser", question: "Roulette russe avec deux balles consécutives ou non", answer: "Deux balles consécutives augmentent la probabilité de survie après premier tir (car dépendance des événements)."},
+  {category: "Brainteaser", question: "Marche aléatoire sur carré 3×3", answer: "Espérance de sortie ≈ 4–6 pas depuis le centre (simulation Monte Carlo possible)."},
+  {category: "Brainteaser", question: "8 boules dont une a un poids différent", answer: "Peser 3 vs 3. Si égal, comparer les 2 restantes. Sinon repeser les plus lourdes. Résolu en 2 pesées."}
+];
+
+let currentIndex = 0;
+let filteredCards = flashcards;
+
+const cardCategory = document.getElementById("cardCategory");
+const cardQuestion = document.getElementById("cardQuestion");
+const cardAnswer = document.getElementById("cardAnswer");
+const showBtn = document.getElementById("showBtn");
+const nextBtn = document.getElementById("nextBtn");
+const prevBtn = document.getElementById("prevBtn");
+const categoryFilter = document.getElementById("categoryFilter");
+
+function showCard(index) {
+  if(filteredCards.length === 0){
+    cardCategory.textContent = "";
+    cardQuestion.textContent = "No questions in this category.";
+    cardAnswer.textContent = "";
+    cardAnswer.style.display = "none";
+    return;
+  }
+  const card = filteredCards[index];
+  cardCategory.textContent = card.category;
+  cardQuestion.textContent = card.question;
+  cardAnswer.textContent = card.answer;
+  cardAnswer.style.display = "none";
+}
+
+showBtn.addEventListener("click", () => {
+  cardAnswer.style.display = cardAnswer.style.display === "none" ? "block" : "none";
+});
+
+nextBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex + 1) % filteredCards.length;
+  showCard(currentIndex);
+});
+
+prevBtn.addEventListener("click", () => {
+  currentIndex = (currentIndex - 1 + filteredCards.length) % filteredCards.length;
+  showCard(currentIndex);
+});
+
+categoryFilter.addEventListener("change", () => {
+  const selected = categoryFilter.value;
+  filteredCards = selected === "All" ? flashcards : flashcards.filter(c => c.category === selected);
+  currentIndex = 0;
+  showCard(currentIndex);
+});
+
+// Initial display
+showCard(currentIndex);
+</script>
+
+</body>
+</html>

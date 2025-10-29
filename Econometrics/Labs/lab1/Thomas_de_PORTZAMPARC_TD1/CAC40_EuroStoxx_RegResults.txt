@@ -1,0 +1,25 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:            CAC40_yield   R-squared:                       0.856
+Model:                            OLS   Adj. R-squared:                  0.856
+Method:                 Least Squares   F-statistic:                 4.982e+04
+Date:                Mon, 15 Sep 2025   Prob (F-statistic):               0.00
+Time:                        23:51:16   Log-Likelihood:                 32423.
+No. Observations:                8394   AIC:                        -6.484e+04
+Df Residuals:                    8392   BIC:                        -6.483e+04
+Df Model:                           1                                         
+Covariance Type:            nonrobust                                         
+===================================================================================
+                      coef    std err          t      P>|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+const            8.274e-06   5.55e-05      0.149      0.882      -0.000       0.000
+EuroStoxx_yield     1.0413      0.005    223.202      0.000       1.032       1.050
+==============================================================================
+Omnibus:                     2602.586   Durbin-Watson:                   2.264
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):           127682.135
+Skew:                           0.719   Prob(JB):                         0.00
+Kurtosis:                      22.053   Cond. No.                         84.1
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
